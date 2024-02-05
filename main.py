@@ -10,13 +10,13 @@ Config.set('graphics', 'height', 720)
 
 from kivy.app import App
 from kivy.core.window import Window
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.label import Label
-from kivy.uix.popup import Popup
 from kivy.graphics import Color, Rectangle
+
+from kivy.uix.label import Label
+from kivy.uix.screenmanager import ScreenManager, Screen
+
 from threading import Thread
 from time import sleep
-from random import choice
 
 x, y = 16, 16
 X, Y = 1280 // x, 720 // y
