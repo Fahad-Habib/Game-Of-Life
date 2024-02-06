@@ -24,7 +24,7 @@ from random import choice
 x, y = 10, 10
 X, Y = WIDTH // x, (HEIGHT-50) // y
 GEN_DELAY = 0.01
-PATTERN = 'gosper_glider_gun.txt'  # Initial pattern to load, set to None to generate a random pattern
+PATTERN = 'gosper_glider_gun_2.txt'  # Initial pattern to load, set to None to generate a random pattern
 
 
 class MainWindow(Screen):
