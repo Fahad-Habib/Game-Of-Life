@@ -1,6 +1,6 @@
 # Game-Of-Life
 
-Python program to simulate John Conway's Game of Life.
+Python program to simulate <a href="https://en.wikipedia.org/wiki/John_Horton_Conway" target="_blank">John Conway</a>'s <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">Game of Life</a>.
 </br>
 Support this project by leaving a :star:
 
