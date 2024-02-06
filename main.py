@@ -4,9 +4,11 @@ A Python program to simulate John Conway's Game of Life.
 
 from kivy.config import Config
 
+WIDTH, HEIGHT = 1600, 900
+
 Config.set('graphics', 'resizable', False)
-Config.set('graphics', 'width', 1280)
-Config.set('graphics', 'height', 720)
+Config.set('graphics', 'width', WIDTH)
+Config.set('graphics', 'height', HEIGHT)
 
 from kivy.app import App
 from kivy.core.window import Window
@@ -17,41 +19,12 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 from threading import Thread
 from time import sleep
+from random import choice	
 
-x, y = 16, 16
-X, Y = 1280 // x, 720 // y
+x, y = 10, 10
+X, Y = WIDTH // x, HEIGHT // y
 GEN_DELAY = 0.01
-PATTERN = 'gosper_glider_gun.txt'  # Pattern to load, set to None to generate a random pattern
-
-
-class GridEntry(Label):
-	def __init__(self, bg_color=[0, 0, 0, 255], **kwargs):
-		super().__init__(**kwargs)
-		
-		self.size = (x, y)
-		self.size_hint = (None, None)
-
-		with self.canvas.before:
-			self.background_color = Color(rgba=[i/255 for i in bg_color])
-			self.background = Rectangle(size=self.size)
-	
-	@property
-	def dimensions(self):
-		return self.size
-
-	@property
-	def position(self):
-		return self.pos
-	
-	@dimensions.setter
-	def dimensions(self, value):
-		self.size = value
-		self.background.size = value
-	
-	@position.setter
-	def position(self, value):
-		self.pos = value
-		self.background.pos = value
+PATTERN = None  # 'gosper_glider_gun.txt'  # Pattern to load, set to None to generate a random pattern
 
 
 class MainWindow(Screen):
@@ -59,13 +32,15 @@ class MainWindow(Screen):
 		super().__init__(**kwargs)
 		
 		self.colors = [[0, 0, 0, 1], [1, 1, 1, 1]]
-		self.grid = [[GridEntry() for _ in range(X)] for _ in range(Y)]
+		self.grid = []
 		
-		for i, row in enumerate(self.grid):
-			for j, entry in enumerate(row):
-				entry.position = (x*j, y*i)
-				self.add_widget(entry)
-		
+		for i in range(Y):
+			self.grid.append([])
+			for j in range(X):
+				with self.canvas.before:
+					self.grid[-1].append(Color(rgba=[0, 0, 0, 1]))
+					Rectangle(size=(x, y), pos=(x*j, y*i))
+
 		if PATTERN:
 			with open(PATTERN) as file:
 				grid = file.read().strip().split('\n')[::-1]
@@ -74,10 +49,10 @@ class MainWindow(Screen):
 		else:
 			self.grid_ = [[0 for _ in range(X+2)] for _ in range(Y+2)]
 			temp = []
-			for i in range(20, 60):
-				for j in range(10, 30):
+			for i in range(20, 50):
+				for j in range(10, 40):
 					temp.append([j, i])
-			temps = [choice(temp) for _ in range(200)]
+			temps = [choice(temp) for _ in range(400)]
 			for i, j in temps:
 				self.grid_[i][j] = 1
 
@@ -87,7 +62,7 @@ class MainWindow(Screen):
 		while True:
 			for i in range(1, Y+1):
 				for j in range(1, X+1):
-					self.grid[i-1][j-1].background_color.rgba = self.colors[self.grid_[i][j]]
+					self.grid[i-1][j-1].rgba = self.colors[self.grid_[i][j]]
 			new_grid = [[0 for _ in range(X+2)] for _ in range(Y+2)]
 			for i in range(1, Y+1):
 				for j in range(1, X+1):
@@ -112,7 +87,6 @@ class ScreenManagement(ScreenManager):
 
 class Game_Of_Life(App):
     def build(self):
-        Window.clearcolor = (0.2, 0.3, 0.4, 1)
         self.manager = ScreenManagement()
         return self.manager
 
